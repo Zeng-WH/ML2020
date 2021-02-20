@@ -7,13 +7,14 @@ import modeling
 import torch
 import numpy as np
 import time
+import pickle
 # 读取文件
 print('Reading data')
-train_x, train_y = read_and_process.read_file('./ml2020spring-hw3/food-11/training', True)
+train_x, train_y = read_and_process.read_file('./food-11/training', True)
 
 print("Size of training data = {}".format(len(train_x)))
 
-val_x, val_y = read_and_process.read_file('./ml2020spring-hw3/food-11/validation', True)
+val_x, val_y = read_and_process.read_file('./food-11/validation', True)
 
 print("Size of validation data = {}".format(len(val_x)))
 
@@ -41,7 +42,7 @@ val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
 model = modeling.Picture_Classifier().cuda()
 loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-num_epoch = 30
+num_epoch = 25
 print('--------------------train------------------------')
 
 for epoch in range(num_epoch):
@@ -76,6 +77,9 @@ for epoch in range(num_epoch):
               (epoch + 1, num_epoch, time.time() - epoch_start_time, \
                train_acc / train_set.__len__(), train_loss / train_set.__len__(), val_acc / val_set.__len__(),
                val_loss / val_set.__len__()))
+with open('cnn_model.pickle', 'wb') as f1:
+    pickle.dump(model, f1)
+
 
 
 
